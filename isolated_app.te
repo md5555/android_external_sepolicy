@@ -21,6 +21,8 @@ allow isolated_app display_service:service_manager find;
 
 # only allow unprivileged socket ioctl commands
 allow isolated_app self:{ rawip_socket tcp_socket udp_socket } { getattr getopt setopt read write shutdown ioctl };
+allow isolated_app self:unix_stream_socket { getattr getopt setopt read write ioctl };
+allow isolated_app system_server:unix_stream_socket { getattr getopt setopt read write ioctl };
 
 #####
 ##### Neverallow
