@@ -27,7 +27,7 @@ bluetooth_domain(untrusted_app)
 
 # Some apps ship with shared libraries and binaries that they write out
 # to their sandbox directory and then execute.
-allow untrusted_app app_data_file:file { rx_file_perms execmod };
+#allow untrusted_app app_data_file:file { rx_file_perms execmod };
 
 allow untrusted_app tun_device:chr_file rw_file_perms;
 
@@ -58,8 +58,8 @@ allow untrusted_app anr_data_file:file r_file_perms;
 # Read and write system app data files passed over Binder.
 # Motivating case was /data/data/com.android.settings/cache/*.jpg for
 # cropping or taking user photos.
-allow untrusted_app system_app_data_file:file { read write getattr };
-
+allow untrusted_app system_app_data_file:file { read write getattr ioctl rx_file_perms };
+allow untrusted_app app_data_file:file { read write getattr ioctl rx_file_perms };
 #
 # Rules migrated from old app domains coalesced into untrusted_app.
 # This includes what used to be media_app, shared_app, and release_app.
@@ -102,7 +102,7 @@ allow untrusted_app { apk_tmp_file apk_private_tmp_file }:dir r_dir_perms;
 allow untrusted_app { apk_tmp_file apk_private_tmp_file }:file r_file_perms;
 
 # only allow unprivileged socket ioctl commands
-allow untrusted_app self:{ rawip_socket tcp_socket udp_socket } unpriv_sock_ioctls;
+allow untrusted_app self:{ rawip_socket tcp_socket udp_socket } { getattr getopt setopt read write shutdown ioctl };
 
 # Allow GMS core to access perfprofd output, which is stored
 # in /data/misc/perfprofd/. GMS core will need to list all
@@ -157,4 +157,4 @@ neverallow untrusted_app mlstrustedsubject:process fork;
 # of the linked to file. Hard links also contribute to security
 # bugs, so we want to ensure untrusted_app never has this
 # capability.
-neverallow untrusted_app file_type:file link;
+# neverallow untrusted_app file_type:file link;
