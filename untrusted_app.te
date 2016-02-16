@@ -103,6 +103,9 @@ allow untrusted_app { apk_tmp_file apk_private_tmp_file }:file r_file_perms;
 
 # only allow unprivileged socket ioctl commands
 allow untrusted_app self:{ rawip_socket tcp_socket udp_socket } { getattr getopt setopt read write shutdown ioctl };
+allow untrusted_app self:unix_stream_socket { getattr getopt setopt read write ioctl };
+allow untrusted_app system_server:unix_stream_socket { getattr getopt setopt read write ioctl };
+
 
 # Allow GMS core to access perfprofd output, which is stored
 # in /data/misc/perfprofd/. GMS core will need to list all
